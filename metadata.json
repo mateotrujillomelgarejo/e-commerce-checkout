@@ -1,0 +1,5 @@
+{
+  "name": "Purple Sky E-commerce Checkout",
+  "description": "A professional, decoupled, and clean Angular frontend for the Purple Sky e-commerce store. It facilitates a complete guest checkout flow, consuming a real .NET REST API. The application is built with Standalone Components, which simplify the architecture by removing NgModules. This leads to less boilerplate, improved lazy-loading, and clearer dependency management, making the application easier to maintain and scale.",
+  "requestFramePermissions": []
+}

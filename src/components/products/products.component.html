@@ -1,0 +1,42 @@
+<div class="flex justify-between items-center mb-[18px] gap-3 flex-wrap">
+  <div>
+    <h1 class="text-2xl font-bold">Catálogo</h1>
+    <p class="text-sm text-[#7a6a6f]">Regala un accesorio, comparte un sentimiento — Lima / Perú</p>
+  </div>
+</div>
+
+<div class="flex flex-wrap gap-3 items-center bg-white/80 p-3 sm:p-4 rounded-xl shadow-[0_4px_10px_rgba(0,0,0,0.05)] mb-5">
+  <label class="text-sm text-[#333]">
+    Categoría:
+    <select class="ml-1.5 p-1.5 rounded-lg border border-black/10 outline-none text-sm">
+      <option value="">Todas</option>
+      <option value="anillos">Anillos</option>
+      <option value="collares">Collares</option>
+      <option value="aretes">Aretes</option>
+      <option value="pulseras">Pulseras</option>
+    </select>
+  </label>
+
+  <label class="text-sm text-[#333]">
+    Precio máximo:
+    <input type="number" placeholder="S/ 50" class="ml-1.5 p-1.5 rounded-lg border border-black/10 outline-none w-24 text-sm">
+  </label>
+</div>
+
+@if (loading()) {
+  <div class="text-center py-10">Cargando productos...</div>
+} @else if (error()) {
+  <div class="text-center py-10 text-red-600">{{ error() }}</div>
+} @else {
+  <div class="grid grid-cols-[repeat(auto-fit,minmax(220px,1fr))] gap-[18px]">
+    @for (product of products(); track product.id) {
+      <div class="bg-white rounded-[14px] p-3.5 shadow-[0_6px_18px_rgba(111,70,90,0.06)] flex flex-col gap-2.5 transition-all duration-200 ease-in-out hover:-translate-y-1 hover:shadow-[0_8px_20px_rgba(111,70,90,0.12)]">
+        <img [src]="product.imageUrl" [alt]="product.nombre" class="w-full h-[180px] object-cover rounded-[10px]">
+        <h4 class="m-0 text-base font-bold text-[#2f1f2a]">{{ product.nombre }}</h4>
+        <p class="text-sm text-[#7a6a6f] line-clamp-2 h-10">{{ product.descripcion }}</p>
+        <div class="font-bold text-[#ff6b9a] text-base mt-auto">S/ {{ product.precio ?? 0 | number:'1.2-2' }}</div>
+        <button (click)="addToCart(product.id)" class="w-full text-center px-3.5 py-2.5 rounded-[10px] bg-[#ff6b9a] text-white font-semibold transition-all duration-200 ease-in-out hover:bg-[#ff5b90] hover:-translate-y-px">Agregar al carrito</button>
+      </div>
+    }
+  </div>
+}

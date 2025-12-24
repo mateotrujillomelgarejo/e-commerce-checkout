@@ -1,0 +1,108 @@
+<div class="flex justify-between items-center mb-6">
+    <h2 class="text-2xl font-bold">Formulario de compra</h2>
+    <a routerLink="/cart" class="px-3.5 py-2.5 rounded-[10px] bg-transparent border border-black/10 text-[#333] font-semibold transition-all duration-200 ease-in-out hover:border-[#ff6b9a] hover:text-[#ff6b9a] no-underline">Volver al carrito</a>
+</div>
+
+@if (cartService.cart()) {
+<div class="grid grid-cols-1 md:grid-cols-[1fr_360px] gap-6 mt-3">
+    <div>
+        <form [formGroup]="checkoutForm" (ngSubmit)="submitCheckout()">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div class="flex flex-col gap-1.5 mb-3">
+                    <label class="text-xs text-[#7a6a6f]">Nombre completo</label>
+                    <input formControlName="fullname" type="text" class="p-2.5 rounded-lg border border-black/10 text-sm w-full">
+                </div>
+                <div class="flex flex-col gap-1.5 mb-3">
+                    <label class="text-xs text-[#7a6a6f]">Email</label>
+                    <input formControlName="email" type="email" class="p-2.5 rounded-lg border border-black/10 text-sm w-full">
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div class="flex flex-col gap-1.5 mb-3">
+                    <label class="text-xs text-[#7a6a6f]">Teléfono</label>
+                    <input formControlName="phone" type="tel" class="p-2.5 rounded-lg border border-black/10 text-sm w-full">
+                </div>
+                <div class="flex flex-col gap-1.5 mb-3">
+                    <label class="text-xs text-[#7a6a6f]">País</label>
+                    <input formControlName="country" type="text" class="p-2.5 rounded-lg border border-black/10 text-sm w-full">
+                </div>
+            </div>
+
+            <div class="flex flex-col gap-1.5 mb-3">
+                <label class="text-xs text-[#7a6a6f]">Dirección (calle, número, referencia)</label>
+                <input formControlName="address" type="text" class="p-2.5 rounded-lg border border-black/10 text-sm w-full">
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div class="flex flex-col gap-1.5 mb-3">
+                    <label class="text-xs text-[#7a6a6f]">Ciudad</label>
+                    <input formControlName="city" type="text" class="p-2.5 rounded-lg border border-black/10 text-sm w-full">
+                </div>
+                <div class="flex flex-col gap-1.5 mb-3">
+                    <label class="text-xs text-[#7a6a6f]">Código postal (opcional)</label>
+                    <input formControlName="postal" type="text" class="p-2.5 rounded-lg border border-black/10 text-sm w-full">
+                </div>
+            </div>
+
+            <div class="flex flex-col gap-1.5 mb-3">
+                <label class="text-xs text-[#7a6a6f]">Notas para el envío (opcional)</label>
+                <textarea formControlName="notes" class="p-2.5 rounded-lg border border-black/10 text-sm w-full min-h-[100px] resize-y"></textarea>
+            </div>
+
+            <div class="flex flex-col gap-1.5 mb-3">
+                <label class="text-xs text-[#7a6a6f]">Método de pago</label>
+                <select formControlName="paymentMethod" class="p-2.5 rounded-lg border border-black/10 text-sm w-full bg-white">
+                    <option value="card">Tarjeta de crédito/débito (simulado)</option>
+                    <option value="paypal">Pago por PayPal (simulado)</option>
+                    <option value="cod">Pago contra entrega</option>
+                </select>
+            </div>
+
+            @if(error()) {
+                <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+                  <span class="block sm:inline">{{ error() }}</span>
+                </div>
+            }
+
+            <div class="flex gap-2.5 mt-2">
+                <a routerLink="/cart" class="px-3.5 py-2.5 rounded-[10px] bg-transparent border border-black/10 text-[#333] font-semibold transition-all duration-200 ease-in-out hover:border-[#ff6b9a] hover:text-[#ff6b9a] no-underline">Volver</a>
+                <button type="submit" [disabled]="loading()" class="px-3.5 py-2.5 rounded-[10px] bg-[#ff6b9a] text-white font-semibold transition-all duration-200 ease-in-out hover:bg-[#ff5b90] hover:-translate-y-px disabled:bg-gray-400">
+                    {{ loading() ? 'Procesando...' : 'Confirmar y pagar' }}
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <aside>
+        <h3 class="font-bold text-lg">Resumen de compra</h3>
+        <div class="bg-gradient-to-b from-white to-[#fff3f6] p-3 rounded-xl border border-[rgba(255,107,154,0.08)] mt-3">
+            @let cart = cartService.cart()!;
+            <div class="space-y-2 text-sm">
+                 @for (item of cart.items; track item.id) {
+                    <div class="flex justify-between items-center text-xs">
+                        <span>{{item.productName}} x {{item.quantity}}</span>
+                        <span class="font-semibold">S/ {{(item.price * item.quantity).toFixed(2)}}</span>
+                    </div>
+                 }
+                <hr class="my-2">
+                <div class="flex justify-between">
+                    <span>Subtotal</span>
+                    <span>S/ {{ cart.subtotal.toFixed(2) }}</span>
+                </div>
+                <div class="flex justify-between">
+                    <span>Envío</span>
+                    <span>S/ {{ cart.shipping.toFixed(2) }}</span>
+                </div>
+                <hr class="my-2">
+                <div class="flex justify-between font-bold text-base">
+                    <span>Total</span>
+                    <span>S/ {{ cart.total.toFixed(2) }}</span>
+                </div>
+            </div>
+        </div>
+    </aside>
+</div>
+} @else {
+    <p>Tu carrito está vacío, no puedes proceder al pago.</p>
+}

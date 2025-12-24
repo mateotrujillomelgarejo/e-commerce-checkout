@@ -1,0 +1,43 @@
+<div class="bg-gradient-to-b from-white to-[#fef7fb] rounded-[14px] p-7 text-center">
+    @if (loading()) {
+        <p>Verificando estado de la orden...</p>
+    } @else if (error()) {
+        <h2 class="text-red-600 font-bold text-xl mb-1.5">Hubo un problema</h2>
+        <p class="text-[#7a6a6f] text-sm">{{ error() }}</p>
+        <div class="mt-4.5">
+            <a routerLink="/products" class="px-3.5 py-2.5 rounded-[10px] bg-[#ff6b9a] text-white font-semibold no-underline">Volver al catálogo</a>
+        </div>
+    } @else if (order()) {
+        @let currentOrder = order()!;
+        <img src="https://picsum.photos/90/90?grayscale" alt="logo" class="w-[90px] h-[90px] rounded-2xl mx-auto mb-3">
+        
+        @if (currentOrder.status === 'Paid') {
+            <h2 class="text-[#ff6b9a] font-bold text-xl mb-1.5">Compra realizada con éxito</h2>
+            <p class="text-[#7a6a6f] text-sm">Tu pedido #{{currentOrder.id.substring(0,8)}} fue procesado correctamente. Recibirás la confirmación por correo.</p>
+        } @else {
+            <h2 class="text-yellow-600 font-bold text-xl mb-1.5">Orden {{ currentOrder.status === 'Cancelled' ? 'Cancelada' : 'Pendiente' }}</h2>
+            <p class="text-[#7a6a6f] text-sm">El estado de tu pedido #{{currentOrder.id.substring(0,8)}} es {{ currentOrder.status }}. Si tienes dudas, contáctanos.</p>
+        }
+
+        <div class="mt-4.5 text-left bg-white/50 p-4 rounded-lg border max-w-sm mx-auto">
+            <h4 class="font-bold text-sm mb-2">Resumen del Pedido</h4>
+            <div class="space-y-1 text-xs">
+                @for (item of currentOrder.items; track item.productName) {
+                    <div class="flex justify-between">
+                        <span>{{ item.productName }} x {{ item.quantity }}</span>
+                        <span>S/ {{ (item.price * item.quantity).toFixed(2) }}</span>
+                    </div>
+                }
+                <hr class="my-1">
+                <div class="flex justify-between font-bold">
+                    <span>Total</span>
+                    <span>S/ {{ currentOrder.total.toFixed(2) }}</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="mt-4.5">
+            <a routerLink="/products" class="px-3.5 py-2.5 rounded-[10px] bg-[#ff6b9a] text-white font-semibold no-underline">Volver al catálogo</a>
+        </div>
+    }
+</div>
